@@ -1,10 +1,38 @@
 Swipecards
 ==========
-fork 自Diolor的Swipecards.添加物理层叠的视觉效果。
---
-原项目效果如下：
+fork 自Diolor的Swipecards.添加了一个物理层叠的视觉效果。
+-
+效果如下：
+![](/swipecard.gif)</br>
+原项目效果如下：</br>
+![ ](/screenshot.gif)
 
+添加了几个控制的方法
 
+     /**
+     * 打开卡片的物理层叠效果
+     * @param showPhysicalVision
+     */
+    public void showPhysicalVision(boolean showPhysicalVision){
+        this.showPhysicalVision = showPhysicalVision;
+    }
+
+     /**
+     * 设置卡片弹出动画时长
+     * @param duration
+     */
+    public void setPopCardAnimationDuration(long duration){
+        this.popAnimDura = duration;
+    }
+    /**
+     * 设置卡片层叠递减值
+     * @param decrease
+     */
+    public void setCardDecrease(int decrease){
+        this.decrease = decrease;
+    }
+
+其他使用方法不变。请参考下面的详情和demo
 
 
 
@@ -18,12 +46,7 @@ It was inspired by [Kikoso's Swipeable-Cards] but I decided to create a more sim
 
 It handles greatly asynchronous loading of adapter's data and uses the same layout parameters as FrameLayout (you may use `android:layout_gravity` in your layout xml file).
 
-![ ](/screenshot.gif)
-
----
-
-
-Installation
+Installation(这个是原项目的依赖跟本fork无关)
 =======
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.lorentzos.swipecards/library/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.lorentzos.swipecards/library)
