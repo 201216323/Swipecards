@@ -1,5 +1,12 @@
 Swipecards
 ==========
+fork 自Diolor的Swipecards.添加物理层叠的视觉效果。
+--
+原项目效果如下：
+
+
+
+
 
 Travis master: [![Build Status](https://travis-ci.org/Diolor/Swipecards.svg?branch=master)](https://travis-ci.org/Diolor/Swipecards) 
 
