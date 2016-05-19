@@ -2,7 +2,7 @@ Swipecards
 ==========
 fork 自Diolor的Swipecards.添加了一个物理层叠的视觉效果。
 -
-效果如下：
+效果如下：</br>
 ![](/swipecard.gif)</br>
 原项目效果如下：</br>
 ![ ](/screenshot.gif)
