@@ -45,7 +45,7 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
     private float fract = 0;
     // 每个卡片的递减值
     private int decrease = 20;
-    private boolean openStackAnim = true;
+    private boolean showPhysicalVision = true;
     private long popAnimDura;
 
 
@@ -153,7 +153,7 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void makeAndAddView(View child) {
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) child.getLayoutParams();
-        if(openStackAnim){
+        if(showPhysicalVision){
             int orignWidth = lp.width;
             scale =LAST_OBJECT_IN_STACK*decrease;
             fract = (float)orignWidth/(float)(orignWidth-2*decrease);
@@ -335,7 +335,7 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
 
     private void doCardPopAnimation() {
         ArrayList<Animator> animators = new ArrayList<Animator>();
-        if(openStackAnim&&LAST_OBJECT_IN_STACK-1>=0&&mActiveCard==null){
+        if(showPhysicalVision&&LAST_OBJECT_IN_STACK-1>=0&&mActiveCard==null){
             int i = 1;
             while(i<Math.min(mAdapter.getCount(), MAX_VISIBLE)){
                 View childView = getChildAt(LAST_OBJECT_IN_STACK-i);
@@ -379,18 +379,26 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
         }
     }
 
+    /**
+     * 设置卡片层叠递减值
+     * @param decrease
+     */
     public void setCardDecrease(int decrease){
         this.decrease = decrease;
     }
 
     /**
-     * 打开弹出卡片的
-     * @param openStackAnim
+     * 打开卡片的物理层叠效果
+     * @param showPhysicalVision
      */
-    public void openPopCardAnim(boolean openStackAnim){
-        this.openStackAnim = openStackAnim;
+    public void showPhysicalVision(boolean showPhysicalVision){
+        this.showPhysicalVision = showPhysicalVision;
     }
 
+    /**
+     * 设置卡片弹出动画时长
+     * @param duration
+     */
     public void setPopCardAnimationDuration(long duration){
         this.popAnimDura = duration;
     }
