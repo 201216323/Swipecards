@@ -1,5 +1,8 @@
 package com.lorentzos.flingswipe;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,8 +12,11 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
+
+import java.util.ArrayList;
 
 /**
  * Created by dionysis_lorentzos on 5/8/14
@@ -35,6 +41,13 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
     private OnItemClickListener mOnItemClickListener;
     private FlingCardListener flingCardListener;
     private PointF mLastTouchPoint;
+    private int scale = 0;
+    private float fract = 0;
+    // 每个卡片的递减值
+    private int decrease = 20;
+    private boolean openStackAnim = true;
+    private long popAnimDura;
+
 
 
     public SwipeFlingAdapterView(Context context) {
@@ -129,8 +142,8 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
         while (startingIndex < Math.min(adapterCount, MAX_VISIBLE) ) {
             View newUnderChild = mAdapter.getView(startingIndex, null, this);
             if (newUnderChild.getVisibility() != GONE) {
-                makeAndAddView(newUnderChild);
                 LAST_OBJECT_IN_STACK = startingIndex;
+                makeAndAddView(newUnderChild);
             }
             startingIndex++;
         }
@@ -139,8 +152,13 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void makeAndAddView(View child) {
-
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) child.getLayoutParams();
+        if(openStackAnim){
+            int orignWidth = lp.width;
+            scale =LAST_OBJECT_IN_STACK*decrease;
+            fract = (float)orignWidth/(float)(orignWidth-2*decrease);
+            lp.width-=2*scale;
+        }
         addViewInLayout(child, 0, lp, true);
 
         final boolean needToMeasure = child.isLayoutRequested();
@@ -155,7 +173,6 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
         } else {
             cleanupLayoutState(child);
         }
-
 
         int w = child.getMeasuredWidth();
         int h = child.getMeasuredHeight();
@@ -198,8 +215,8 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
                 childTop = getPaddingTop() + lp.topMargin;
                 break;
         }
-
-        child.layout(childLeft, childTop, childLeft + w, childTop + h);
+        child.layout(childLeft, childTop+scale, childLeft + w, childTop + h+scale);
+//        child.layout(childLeft, childTop, childLeft + w, childTop + h);
     }
 
 
@@ -307,9 +324,8 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
     private class AdapterDataSetObserver extends DataSetObserver {
         @Override
         public void onChanged() {
-            requestLayout();
+            doCardPopAnimation();
         }
-
         @Override
         public void onInvalidated() {
             requestLayout();
@@ -317,6 +333,67 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
 
     }
 
+    private void doCardPopAnimation() {
+        ArrayList<Animator> animators = new ArrayList<Animator>();
+        if(openStackAnim&&LAST_OBJECT_IN_STACK-1>=0&&mActiveCard==null){
+            int i = 1;
+            while(i<Math.min(mAdapter.getCount(), MAX_VISIBLE)){
+                View childView = getChildAt(LAST_OBJECT_IN_STACK-i);
+                if(childView!=null){
+                    childView.setPivotX(childView.getWidth()/2);
+                    ObjectAnimator animScale = ObjectAnimator.ofFloat(childView,"scaleX",fract);
+                    ObjectAnimator animTranslate = ObjectAnimator.ofFloat(childView,"translationY",-decrease);
+                    if(i==1){
+                        animScale.setInterpolator(new BounceInterpolator());
+                        animTranslate.setInterpolator(new BounceInterpolator());
+                    }
+                    animators.add(animScale);
+                    animators.add(animTranslate);
+                }
+                i++;
+            }
+            AnimatorSet set = new AnimatorSet();
+            set.setDuration(300);
+            set.playTogether(animators);
+            set.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    requestLayout();
+                }
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            set.start();
+        }else{
+            requestLayout();
+        }
+    }
+
+    public void setCardDecrease(int decrease){
+        this.decrease = decrease;
+    }
+
+    /**
+     * 打开弹出卡片的
+     * @param openStackAnim
+     */
+    public void openPopCardAnim(boolean openStackAnim){
+        this.openStackAnim = openStackAnim;
+    }
+
+    public void setPopCardAnimationDuration(long duration){
+        this.popAnimDura = duration;
+    }
 
     public interface OnItemClickListener {
         void onItemClicked(int itemPosition, Object dataObject);
