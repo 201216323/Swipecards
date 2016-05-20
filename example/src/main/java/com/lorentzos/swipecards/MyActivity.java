@@ -43,7 +43,7 @@ public class MyActivity extends Activity {
 
         arrayAdapter = new ArrayAdapter<>(this, R.layout.item, R.id.helloText, al );
 
-//        flingContainer.openPopCardAnim(false);
+//        flingContainer.showPhysicalVision(false);
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
