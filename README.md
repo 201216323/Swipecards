@@ -46,7 +46,7 @@ It was inspired by [Kikoso's Swipeable-Cards] but I decided to create a more sim
 
 It handles greatly asynchronous loading of adapter's data and uses the same layout parameters as FrameLayout (you may use `android:layout_gravity` in your layout xml file).
 
-Installation(这个是原项目的依赖跟本fork无关)
+Installation(这个是原项目的使用引入跟本fork无关)
 =======
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.lorentzos.swipecards/library/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.lorentzos.swipecards/library)
