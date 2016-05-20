@@ -46,7 +46,7 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
     // 每个卡片的递减值
     private int decrease = 20;
     private boolean showPhysicalVision = true;
-    private long popAnimDura;
+    private long popAnimDura = 300;
 
 
 
@@ -353,7 +353,7 @@ public class SwipeFlingAdapterView extends BaseFlingAdapterView {
                 i++;
             }
             AnimatorSet set = new AnimatorSet();
-            set.setDuration(300);
+            set.setDuration(popAnimDura);
             set.playTogether(animators);
             set.addListener(new Animator.AnimatorListener() {
                 @Override
