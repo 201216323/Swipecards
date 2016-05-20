@@ -44,6 +44,7 @@ public class MyActivity extends Activity {
         arrayAdapter = new ArrayAdapter<>(this, R.layout.item, R.id.helloText, al );
 
 //        flingContainer.showPhysicalVision(false);
+//        flingContainer.setPopCardAnimationDuration(500);
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
